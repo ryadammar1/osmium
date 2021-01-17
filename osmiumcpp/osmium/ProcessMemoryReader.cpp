@@ -1,29 +1,53 @@
 #include "ProcessMemoryReader.h"
 
-    ProcessMemoryReader::ProcessMemoryReader(std::string version, std::wstring version_w, boolean optifine) {
-        this->version = version;
-        this->version_w = version_w;
-        this->optifine = optifine;
-    }
-
     ProcessMemoryReader::ProcessMemoryReader() {
-        this->version = DEFAULT_VERSION;
-        this->version_w = DEFAULT_VERSION_W;
-        this->optifine = FALSE;
+        this->coordinates = { 0, 0, 0 };
     }
 
     void ProcessMemoryReader::PrintCooridnates() {
-        std::cout << "[debuginfo]: " << this->coordinates.x << ", " << this->coordinates.y << ", " << this->coordinates.z << std::endl;
+        cout << "[debuginfo]: " << this->coordinates.x << ", " << this->coordinates.y << ", " << this->coordinates.z << endl;
     }
 
-    uintptr_t GetModuleBaseAddress(const wchar_t* lpsz_module_name, DWORD pID) {
+    std::string ProcessMemoryReader::WcharString(wchar_t* wc)
+    {
+        string str;
+        while (*wc)
+            str += (char)*wc++;
+        return  str;
+    }
+
+    HWND ProcessMemoryReader::GetHandle(std::string title)
+    {
+        for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT))
+        {
+            if (!IsWindowVisible(hwnd))
+                continue;
+
+            int length = GetWindowTextLength(hwnd);
+            if (length == 0)
+                continue;
+
+            wchar_t* title_w = new wchar_t[length + 1];
+
+            GetWindowText(hwnd, title_w, length + 1);
+
+            string title_s = WcharString(title_w);
+
+            if (title_s.find(title) != string::npos) {
+                return hwnd;
+            }
+        }
+        return NULL;
+    }
+
+    uintptr_t ProcessMemoryReader::GetModuleBaseAddress(const wchar_t* lpsz_module_name, DWORD pID) {
         uintptr_t dw_module_base_address = 0;
         HANDLE h_snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pID);
         MODULEENTRY32 module_entry_32 = { 0 };
         module_entry_32.dwSize = sizeof(MODULEENTRY32);
 
         if (h_snapshot == INVALID_HANDLE_VALUE) {
-            std::cout << "[error]: Module Snapshot error: Error " << GetLastError() << std::endl;
+            cout << "[error]: Module Snapshot error: Error " << GetLastError() << endl;
             system("PAUSE");
             exit(1);
         }
@@ -47,23 +71,11 @@
 
     int ProcessMemoryReader::FetchCoordinates() {
 
-        std::wstring window_title_w;
-
-        std::string window_title;
-        std::string err_window_msg;
-
-        window_title = optifine ? "Minecraft* " + version + " - Singleplayer" : "Minecraft " + version + " - Singleplayer";
-
-        window_title_w = optifine ? L"Minecraft* " + version_w + L" - Singleplayer" : L"Minecraft " + version_w + L" - Singleplayer";
-        LPCWSTR window_title_LPCWSTR = window_title_w.c_str();
-
-        HWND h_game_window = FindWindow(NULL, window_title_LPCWSTR);
+        HWND h_game_window = GetHandle("Minecraft");
 
         if (!h_game_window) {
-            err_window_msg = "Make sure " + window_title + " is running.";
 
-            std::cout << "[error]: A Minecraft instance needs to be running." << std::endl;
-            std::cout << err_window_msg << std::endl;
+            cout << "[error]: A Minecraft instance needs to be running." << endl;
 
             system("pause");
 

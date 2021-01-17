@@ -7,7 +7,9 @@
 #include <iostream>
 #include <tchar.h>
 #include <vector>
-    
+
+using namespace std;
+
     //Structs
 
     struct Coordinates {
@@ -16,15 +18,9 @@
 
     class ProcessMemoryReader {
     public:
-        //Constants
-
-        const std::wstring DEFAULT_VERSION_W = L"1.16.5";
-        const std::string DEFAULT_VERSION = "1.16.5";
-
         //Constructors
 
         ProcessMemoryReader();
-        ProcessMemoryReader(std::string, std::wstring, boolean);
 
         //Functions
 
@@ -34,12 +30,12 @@
 
         //Variables
 
-        std::wstring version_w;
-        std::string version;
-
-        boolean optifine;
-
         Coordinates coordinates;
+
+    private:
+        HWND GetHandle(std::string);
+        string WcharString(wchar_t* str);
+        uintptr_t GetModuleBaseAddress(const wchar_t* lpsz_module_name, DWORD pID);
     };
 
 #endif

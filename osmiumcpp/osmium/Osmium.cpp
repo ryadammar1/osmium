@@ -52,13 +52,12 @@ int PrintSeed()
 
 int main() 
 {
-    ProcessMemoryReader pmr("1.16.5", L"1.16.5", FALSE);
+    ProcessMemoryReader pmr;
 
     ShowConsoleCursor(false);
 
-    int Set[] = { 7, 7, 7 };
+    int Set[] = { 12, 7, 7 };
     int counter = 1;
-    int counter_opt = 0;
     char key;
 
     for (;;) {
@@ -88,59 +87,9 @@ int main()
 
         if (key == '\r') {
             if (counter == 1) {
-                for (;;) {
-
-                    GoTo(10, 5);
-                    cout << "Change game directory";
-                    GoTo(10, 6);
-                    cout << "Change game version";
-                    GoTo(10, 7);
-                    cout << "Modded";
-
-                    if (is_modded) {
-                        GoTo(17, 7);
-                        cout << "TRUE";
-                    }
-                    else {
-                        GoTo(17, 7);
-                        cout << "FALSE";
-                    }
-
-                    key = _getch();
-
-                    if (key == 72 && counter_opt > 0) {
-                        counter_opt--;
-                    }
-                    else if (key == 80 && counter_opt < 2) {
-                        counter_opt++;
-                    }
-                    if (counter_opt == 0) {
-                        system("CLS");
-                        GoTo(8, 5);
-                        cout << "> ";
-                    }
-                    else if (counter_opt == 1) {
-                        system("CLS");
-                        GoTo(8, 6);
-                        cout << "> ";
-                    }
-                    else {
-                        system("CLS");
-                        GoTo(8, 7);
-                        cout << "> ";
-
-                        if (GetAsyncKeyState(VK_RIGHT))
-                            is_modded = TRUE;
-                        else if (GetAsyncKeyState(VK_LEFT))
-                            is_modded = FALSE;
-                        }
-                    
-                    if (GetAsyncKeyState(VK_ESCAPE)) {
-                        break;
-                        }
-                    }
+                system("CLS");
                 }
-            if (counter == 2) {
+            else if (counter == 2) {
                 system("CLS");
                 for (;;) {
                     GoTo(10, 5);
@@ -160,8 +109,7 @@ int main()
                     }
                 }
             }
-            if (counter == 3) {
-                system("CLS");
+            else if (counter == 3) {
                 exit(0);
             }
         }
