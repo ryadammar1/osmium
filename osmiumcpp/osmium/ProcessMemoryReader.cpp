@@ -75,11 +75,20 @@
 
         if (!h_game_window) {
 
+            COORD c;
+
+            c.X = 10;
+            c.Y = 5;
+            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
+
             cout << "[error]: A Minecraft instance needs to be running." << endl;
+
+            c.Y = 6;
+            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 
             system("pause");
 
-            exit(1);
+            return (1);
         }
 
         DWORD pID = NULL;
