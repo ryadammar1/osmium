@@ -160,9 +160,11 @@ int main()
                     GoTo(10, 9);
                     PrintSeed();
 
-                    key = _getch();
-                    if (key == 27)
-                        break;
+                    if (_kbhit()) {
+                        key = _getch();
+                        if (key == 27)
+                            break;
+                    }
                 }
             }
             else if (counter1 == 3) {
