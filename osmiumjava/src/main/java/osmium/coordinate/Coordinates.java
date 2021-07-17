@@ -1,9 +1,17 @@
 package osmium.coordinate;
 
-public class Coordinate {
+public class Coordinates {
 
 	float x, y, z;
 
+	public Coordinates(int x, int z) {
+		this.x = x;
+		this.z = z;
+	}
+
+	public Coordinates() {
+	}
+	
 	public float getX() {
 		return x;
 	}

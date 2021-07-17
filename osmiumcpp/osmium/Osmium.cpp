@@ -2,12 +2,16 @@
 #include <conio.h>
 #include <cstdlib>
 
-    using namespace std;
+using namespace std;
 
-    const string DEFAULT_COMMAND = "java -jar ./libs/Osmium.jar";
+const string DEFAULT_STRONGHOLD_COMMAND = "java -jar ./libs/Osmium.jar stronghold 0 0";
+const string DEFAULT_BASTION_COMMAND = "java -jar ./libs/Osmium.jar bastion";
+const string DEFAULT_FORTRESS_COMMAND = "java -jar ./libs/Osmium.jar fortress";
 
 string game_dir;
-string command = DEFAULT_COMMAND;
+string stronghold_command = DEFAULT_STRONGHOLD_COMMAND;
+string bastion_command = DEFAULT_BASTION_COMMAND;
+string fortress_command = DEFAULT_FORTRESS_COMMAND;
 
 void SetColor(int color) 
 {
@@ -33,15 +37,47 @@ void ShowConsoleCursor(bool showFlag)
     SetConsoleCursorInfo(out, &cursorInfo);
 }
 
-int PrintSeed() 
+int PrintStronghold()
 {
     if (game_dir.empty()) {
-        command = DEFAULT_COMMAND;
-        system(command.c_str());
+        stronghold_command = DEFAULT_STRONGHOLD_COMMAND;
+        system(stronghold_command.c_str());
     }
     else {
-        command += " " + game_dir + "/saves/";
-        system(command.c_str());
+        stronghold_command += " " + game_dir + "/saves/";
+        system(stronghold_command.c_str());
+    }
+
+    return 0;
+}
+
+int PrintBastion(int x, int z)
+{
+    string playerCoordinates = " " + to_string(x) + " " + to_string(z);
+
+    if (game_dir.empty()) {
+        bastion_command = DEFAULT_BASTION_COMMAND + playerCoordinates;
+        system(bastion_command.c_str());
+    }
+    else {
+        bastion_command += playerCoordinates + " " + game_dir + "/saves/";
+        system(bastion_command.c_str());
+    }
+
+    return 0;
+}
+
+int PrintFortress(int x, int z)
+{
+    string playerCoordinates = " " + to_string(x) + " " + to_string(z);
+
+    if (game_dir.empty()) {
+        fortress_command = DEFAULT_FORTRESS_COMMAND + playerCoordinates;
+        system(fortress_command.c_str());
+    }
+    else {
+        fortress_command += playerCoordinates + " " + game_dir + "/saves/";
+        system(fortress_command.c_str());
     }
 
     return 0;
@@ -158,7 +194,17 @@ int main()
                     GoTo(10, 8);
                     cout << "Nearest stronghold: ";
                     GoTo(10, 9);
-                    PrintSeed();
+                    PrintStronghold();
+
+                    GoTo(10, 11);
+                    cout << "Nearest bastion: ";
+                    GoTo(10, 12);
+                    PrintBastion((int)coordinates.x, (int)coordinates.z);
+
+                    GoTo(10, 14);
+                    cout << "Nearest fortress: ";
+                    GoTo(10, 15);
+                    PrintFortress((int)coordinates.x, (int)coordinates.z);
 
                     if (_kbhit()) {
                         key = _getch();
