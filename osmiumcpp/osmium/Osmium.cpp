@@ -1,17 +1,22 @@
 #include "ProcessMemoryReader.h"
+#include "JavaInvocater.h"
 #include <conio.h>
 #include <cstdlib>
 
 using namespace std;
 
-const string DEFAULT_STRONGHOLD_COMMAND = "java -jar ./libs/Osmium.jar stronghold 0 0";
-const string DEFAULT_BASTION_COMMAND = "java -jar ./libs/Osmium.jar bastion";
-const string DEFAULT_FORTRESS_COMMAND = "java -jar ./libs/Osmium.jar fortress";
+const string DEFAULT_LIBRARY_PATH = "./libs/Osmium.jar";
+
+const string DEFAULT_STRONGHOLD_COMMAND = "java -jar " + DEFAULT_LIBRARY_PATH + " stronghold 0 0";
+const string DEFAULT_BASTION_COMMAND = "java -jar " + DEFAULT_LIBRARY_PATH + " bastion";
+const string DEFAULT_FORTRESS_COMMAND = "java -jar " + DEFAULT_LIBRARY_PATH + " fortress";
 
 string game_dir;
 string stronghold_command = DEFAULT_STRONGHOLD_COMMAND;
 string bastion_command = DEFAULT_BASTION_COMMAND;
 string fortress_command = DEFAULT_FORTRESS_COMMAND;
+
+JavaInvocater* javaInvocater;
 
 void SetColor(int color) 
 {
@@ -39,46 +44,21 @@ void ShowConsoleCursor(bool showFlag)
 
 int PrintStronghold()
 {
-    if (game_dir.empty()) {
-        stronghold_command = DEFAULT_STRONGHOLD_COMMAND;
-        system(stronghold_command.c_str());
-    }
-    else {
-        stronghold_command += " " + game_dir + "/saves/";
-        system(stronghold_command.c_str());
-    }
+    javaInvocater->CallJar("stronghold", 0, 0);
 
     return 0;
 }
 
 int PrintBastion(int x, int z)
 {
-    string playerCoordinates = " " + to_string(x) + " " + to_string(z);
-
-    if (game_dir.empty()) {
-        bastion_command = DEFAULT_BASTION_COMMAND + playerCoordinates;
-        system(bastion_command.c_str());
-    }
-    else {
-        bastion_command += playerCoordinates + " " + game_dir + "/saves/";
-        system(bastion_command.c_str());
-    }
+    javaInvocater->CallJar("bastion", x, z);
 
     return 0;
 }
 
 int PrintFortress(int x, int z)
 {
-    string playerCoordinates = " " + to_string(x) + " " + to_string(z);
-
-    if (game_dir.empty()) {
-        fortress_command = DEFAULT_FORTRESS_COMMAND + playerCoordinates;
-        system(fortress_command.c_str());
-    }
-    else {
-        fortress_command += playerCoordinates + " " + game_dir + "/saves/";
-        system(fortress_command.c_str());
-    }
+    javaInvocater->CallJar("fortress", x, z);
 
     return 0;
 }
@@ -86,6 +66,7 @@ int PrintFortress(int x, int z)
 int main() 
 {
     ProcessMemoryReader pmr;
+    javaInvocater = new JavaInvocater(DEFAULT_LIBRARY_PATH);
 
     ShowConsoleCursor(false);
 
@@ -112,19 +93,23 @@ int main()
 
         key = _getch();
 
-        if (key == 80 && (counter1 == 3)) {
+        if ((key == 80 || key == 's' || 
+            key == 'S') && (counter1 == 3)) {
             counter1 = 1;
         }
 
-        else if (key == 72 && (counter1 == 1)) {
+        else if ((key == 72 || key == 'w' || 
+            key == 'W') && (counter1 == 1)) {
             counter1 = 3;
         }
 
-        else if (key == 72 && (counter1 >= 2 && counter1 <= 3)) {
+        else if ((key == 72 || key == 'w' || 
+            key == 'W') && (counter1 >= 2 && counter1 <= 3)) {
             counter1--;
         }
 
-        else if (key == 80 && (counter1 >= 1 && counter1 <= 2)) {
+        else if ((key == 80 || key == 's' || 
+            key == 'S') && (counter1 >= 1 && counter1 <= 2)) {
             counter1++;
         }
 
@@ -144,11 +129,13 @@ int main()
 
                     key = _getch();
 
-                    if ((key == 80 || key == 72) && (counter2 == 2)) {
+                    if (((key == 80 || key == 's' || key == 'S') || 
+                        (key == 72 || key == 'w' || key == 'W')) && (counter2 == 2)) {
                         counter2 = 1;
                     }
 
-                    else if ((key == 80 || key == 72) && (counter2 == 1)) {
+                    else if (((key == 80 || key == 's' || key == 'S') || 
+                        (key == 72 || key == 'w' || key == 'W')) && (counter2 == 1)) {
                         counter2 = 2;
                     }
 

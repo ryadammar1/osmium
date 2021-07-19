@@ -20,34 +20,45 @@ public class WorldSelector {
 	}
 
 	public File getWorldDir() throws InvalidDirectoryException {
-		if(worldDir != null)
+		if (worldDir != null)
 			return worldDir;
 		refreshWorldDir();
-			return worldDir;
+		return worldDir;
 	}
-	
+
 	public File getRefreshedWorldDir() throws InvalidDirectoryException {
 		refreshWorldDir();
-			return worldDir;
+		return worldDir;
 	}
-	
+
 	private void refreshWorldDir() throws InvalidDirectoryException {
 		File dir = new File(savesPath);
-		
-		if(!dir.exists())
+
+		if (!dir.exists())
 			throw new InvalidDirectoryException(dir);
-		
+
 		File[] worlds = dir.listFiles();
+
+		if (worlds.length == 0) {
+			this.worldDir = null;
+			return;
+		}
+
 		this.worldDir = Arrays.stream(worlds).filter(File::isDirectory).max(Comparator.comparing(File::lastModified))
 				.orElse(null);
 	}
-	
+
 	public File getLevelDat() throws InvalidDirectoryException {
 		return new File(getWorldDir() + "\\level.dat");
 	}
-	
+
 	public File getRefreshedLevelDat() throws InvalidDirectoryException {
-		return new File(getRefreshedWorldDir() + "\\level.dat");
+		File refreshedWorldDir = getRefreshedWorldDir();
+		
+		if (refreshedWorldDir == null)
+			return null;
+		
+		return new File(refreshedWorldDir + "\\level.dat");
 	}
 
 	public void setWorldDir(File worldDir) {

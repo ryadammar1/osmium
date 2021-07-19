@@ -16,6 +16,9 @@ public class LevelDatNBT {
 	long levelDatSeed;
 
 	public LevelDatNBT(File levelDat) throws IOException {
+		if(levelDat == null)
+			return;
+		
 		this.levelDatNtag = NBTUtil.read(levelDat);
 	}
 	
@@ -24,6 +27,9 @@ public class LevelDatNBT {
 	}
 	
 	public void refreshLevelDatNtag(File levelDat) throws IOException {
+		if(levelDat == null)
+			return;
+		
 		this.levelDatNtag = NBTUtil.read(levelDat);
 	}
 

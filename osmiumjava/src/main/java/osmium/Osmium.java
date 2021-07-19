@@ -1,6 +1,7 @@
 package osmium;
 
 import java.io.IOException;
+
 import osmium.exception.InvalidDirectoryException;
 import osmium.locater.StrongholdLocator;
 import osmium.locater.StructureLocator;
@@ -9,51 +10,66 @@ import osmium.structure.StructureEnum;
 
 public class Osmium {
 
+	static StrongholdLocator strongholdLocater;
+	static StructureLocator structureLocater;
+	static SeedParser seepParser;
+
 	public static void main(String[] args) {
-		StrongholdLocator strongholdLocater;
-		StructureLocator structureLocater;
+	}
 
-		SeedParser seepParser;
-
-		if (args.length < 3) {
-			System.out.println(
-					"Error: Wrong usage. Must indicate structure type (stronghold, bastion, etc.) and player position (x, z).");
-			return;
-		}
-
+	public static void instantiate() {
 		try {
-			if (args.length > 3)
-				seepParser = new SeedParser(args[3]);
-			else
-				seepParser = new SeedParser();
+			seepParser = new SeedParser();
 		} catch (InvalidDirectoryException e) {
-			System.out.println(e.getMessage());
-			return;
+			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			return;
+			e.printStackTrace();
 		}
+		strongholdLocater = new StrongholdLocator();
+		structureLocater = new StructureLocator();
+	}
 
-		switch (args[0]) {
+	public static void getLocation(String structure, int playerX, int playerZ) {
+		switch (structure) {
 		case "stronghold":
-			strongholdLocater = new StrongholdLocator();
-			System.out.println(strongholdLocater.locateStronghold(seepParser.getRefreshedSeed()));
+			if (strongholdLocater.locateStronghold(seepParser.getRefreshedSeed()))
+				System.out.println(strongholdLocater.getCoordinates());
+			else
+				System.out.println("Unable to find a stronghold nearby.");
 			break;
 		case "bastion":
-			structureLocater = new StructureLocator(seepParser.getRefreshedSeed(), StructureEnum.BASTION,
-					Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-			structureLocater.locateStructure();
-			System.out.println(structureLocater.getCoordinates());
+			if (structureLocater.locateStructure(seepParser.getRefreshedSeed(), StructureEnum.BASTION, playerX,
+					playerZ))
+				System.out.println(structureLocater.getCoordinates());
+			else
+				System.out.println("Unable to find a bastion nearby.");
 			break;
 		case "fortress":
-			structureLocater = new StructureLocator(seepParser.getRefreshedSeed(), StructureEnum.FORTRESS,
-					Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-			structureLocater.locateStructure();
-			System.out.println(structureLocater.getCoordinates());
+			if (structureLocater.locateStructure(seepParser.getRefreshedSeed(), StructureEnum.FORTRESS, playerX,
+					playerZ))
+				System.out.println(structureLocater.getCoordinates());
+			else
+				System.out.println("Unable to find a fortress nearby.");
 			break;
 		default:
 			System.out.println("Error: Invalid structure type.");
-			return;
+			break;
 		}
+	}
+
+	public static void setSaveDir(String saveDir) {
+		seepParser.setSavePath(saveDir);
+	}
+
+	public static StrongholdLocator getStrongholdLocater() {
+		return strongholdLocater;
+	}
+
+	public static StructureLocator getStructureLocater() {
+		return structureLocater;
+	}
+
+	public static SeedParser getSeepParser() {
+		return seepParser;
 	}
 }

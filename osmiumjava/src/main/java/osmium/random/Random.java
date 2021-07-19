@@ -2,15 +2,17 @@ package osmium.random;
 
 public class Random {
 	
-	private final long originalSeed;
+	private long originalSeed;
 	private long seed;
 	
 	public long getSeed() {
 		return seed;
 	}
 
-	public void setSeed(long seed) {
+	public void setSeed(long seed, boolean force) {
 		this.seed = seed;
+		if(force)
+			this.originalSeed = seed;
 	}
 	
 	public void reset() {
@@ -20,7 +22,13 @@ public class Random {
 	public Random(long seed) {
 		this.originalSeed = seed;
 		
-		setSeed(seed);
+		setSeed(seed,false);
+	}
+	
+	public Random() {
+		this.originalSeed = 0;
+		
+		setSeed(0,false);
 	}
 
 	public int nextInt(final int n, boolean affectSeed) {
@@ -40,7 +48,7 @@ public class Random {
 		} while (bits - val + m < 0);
 
 		if(!affectSeed)
-			setSeed(savedSeed);
+			setSeed(savedSeed,false);
 		
 		return val;
 	}

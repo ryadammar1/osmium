@@ -10,25 +10,17 @@
 
 using namespace std;
 
-    //Structs
-
     struct Coordinates {
         float x, y, z;
     };
 
     class ProcessMemoryReader {
     public:
-        //Constructors
-
         ProcessMemoryReader();
-
-        //Functions
 
         int FetchCoordinates();
         void PrintCooridnates();
         Coordinates GetCoordinates();
-
-        //Variables
 
         Coordinates coordinates;
 
