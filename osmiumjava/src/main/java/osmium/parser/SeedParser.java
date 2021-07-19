@@ -23,6 +23,10 @@ public class SeedParser {
 		this.levelDataNBT = new LevelDatNBT(this.worldSelector.getRefreshedLevelDat());
 	}
 
+	public void setSavePath(String savePath) {
+		this.worldSelector.setSavesPath(savePath);
+	}
+
 	private void refreshLevelDataNBT() throws InvalidDirectoryException, IOException {
 		this.levelDataNBT.refreshLevelDatNtag(this.worldSelector.getRefreshedLevelDat());
 	}
@@ -30,18 +34,14 @@ public class SeedParser {
 	public long getRefreshedSeed() {
 		try {
 			refreshLevelDataNBT();
-		} catch (InvalidDirectoryException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			return -1;
 		}
 		try {
 			return levelDataNBT.getLevelDatSeed();
-		} catch (ParseException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			return -1;
 		}
-		return -1;
-
 	}
 
 }

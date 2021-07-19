@@ -21,9 +21,15 @@
     <ClCompile Include="Osmium.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JavaInvocater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessMemoryReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JavaInvocater.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,24 +19,29 @@ public class StructureLocator {
 		return structCoordinates;
 	}
 
-	public StructureLocator(long seed, StructureEnum type, int playerx, int playerz) {
-		playerCoordinates = new Coordinates(playerx, playerz);
+	public StructureLocator() {
+		rnd = new Random();
+		playerCoordinates = new Coordinates();
+	}
 
-		rnd = new Random(seed);
+	public void setSeed(long value) {
+		rnd.setSeed(value, false);
+	}
 
+	public boolean locateStructure(long seed, StructureEnum type, int x, int z) {
+		if(seed == -1) // Save directory is empty
+			return false;
+		
+		rnd.setSeed(seed, true);
+		playerCoordinates.setX(x);
+		playerCoordinates.setZ(z);
 		try {
 			structure = Structure.getStructure(type);
 		} catch (InvalidStructureTypeException e) {
-			System.out.println(e.getMessage());
-			return;
+			System.out.println("Error while trying to get structure type.");
+			return false;
 		}
-	}
-
-	void updateSeed(long value) {
-		rnd.setSeed((value ^ Long.parseLong("5deece66d", 16)) & ((1L << 48) - 1));
-	}
-
-	public boolean locateStructure() {
+		
 		boolean status = false;
 
 		for (int i = -3; i <= 3; i++) {
@@ -59,10 +64,20 @@ public class StructureLocator {
 				rnd.reset();
 			}
 		}
+
+		resetDistance();
 		return status;
 	}
 
+	private void updateSeed(long value) {
+		rnd.setSeed((value ^ Long.parseLong("5deece66d", 16)) & ((1L << 48) - 1), false);
+	}
+
 	private double dist = Double.POSITIVE_INFINITY;
+
+	private void resetDistance() {
+		dist = Double.POSITIVE_INFINITY;
+	}
 
 	private void computeDistance() {
 		dist = (playerCoordinates.getX() - structCoordinates.getX())
