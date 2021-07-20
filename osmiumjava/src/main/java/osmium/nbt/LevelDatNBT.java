@@ -12,29 +12,9 @@ import osmium.parser.JsonParser;
 public class LevelDatNBT {
 
 	NamedTag levelDatNtag;
-	
-	long levelDatSeed;
 
-	public LevelDatNBT(File levelDat) throws IOException {
-		if(levelDat == null)
-			return;
-		
-		this.levelDatNtag = NBTUtil.read(levelDat);
+	public Long getLevelDatSeed(File levelDat) throws ParseException, IOException {
+		levelDatNtag = levelDat != null ? NBTUtil.read(levelDat) : null;
+		return JsonParser.parseSeed(levelDatNtag);
 	}
-	
-	public long getLevelDatSeed() throws ParseException {
-		return JsonParser.parseSeed(this.levelDatNtag);
-	}
-	
-	public void refreshLevelDatNtag(File levelDat) throws IOException {
-		if(levelDat == null)
-			return;
-		
-		this.levelDatNtag = NBTUtil.read(levelDat);
-	}
-
-	public NamedTag getLevelDatNtag() {
-		return levelDatNtag;
-	}
-
 }
