@@ -2,19 +2,13 @@
 #include "JavaInvocater.h"
 #include <conio.h>
 #include <cstdlib>
+#include <vector>
 
 using namespace std;
 
 const string DEFAULT_LIBRARY_PATH = "./libs/Osmium.jar";
-
-const string DEFAULT_STRONGHOLD_COMMAND = "java -jar " + DEFAULT_LIBRARY_PATH + " stronghold 0 0";
-const string DEFAULT_BASTION_COMMAND = "java -jar " + DEFAULT_LIBRARY_PATH + " bastion";
-const string DEFAULT_FORTRESS_COMMAND = "java -jar " + DEFAULT_LIBRARY_PATH + " fortress";
-
 string game_dir;
-string stronghold_command = DEFAULT_STRONGHOLD_COMMAND;
-string bastion_command = DEFAULT_BASTION_COMMAND;
-string fortress_command = DEFAULT_FORTRESS_COMMAND;
+string blank = "                          ";
 
 JavaInvocater* javaInvocater;
 
@@ -38,27 +32,36 @@ void ShowConsoleCursor(bool showFlag)
     CONSOLE_CURSOR_INFO     cursorInfo;
 
     GetConsoleCursorInfo(out, &cursorInfo);
-    cursorInfo.bVisible = showFlag; // set the cursor visibility
+    cursorInfo.bVisible = showFlag;
     SetConsoleCursorInfo(out, &cursorInfo);
+}
+
+int UpdateGameDirectory() {
+    javaInvocater->UpdateGameDir(game_dir);
+
+    return 0;
 }
 
 int PrintStronghold()
 {
-    javaInvocater->CallJar("stronghold", 0, 0);
+    vector<int> coords = javaInvocater->CallJar("STRONGHOLD", 0, 0);
+    cout << coords[1] << ", " << coords[2] << blank;
 
     return 0;
 }
 
 int PrintBastion(int x, int z)
 {
-    javaInvocater->CallJar("bastion", x, z);
+    vector<int> coords = javaInvocater->CallJar("BASTION", x, z);
+    cout << coords[1] << ", " << coords[2] << blank;
 
     return 0;
 }
 
 int PrintFortress(int x, int z)
 {
-    javaInvocater->CallJar("fortress", x, z);
+    vector<int> coords = javaInvocater->CallJar("FORTRESS", x, z);
+    cout << coords[1] << ", " << coords[2] << blank;
 
     return 0;
 }
@@ -148,9 +151,10 @@ int main()
                             getline(cin, game_dir);
                         }
                         else if (counter2 == 2) {
-                            game_dir = "";
-                            break;
+                            game_dir = "default";
                         }
+
+                        UpdateGameDirectory();
                     }
 
                     if (key == 27)
@@ -176,7 +180,8 @@ int main()
                     if (pmr.FetchCoordinates())
                         break;
                     Coordinates coordinates = pmr.GetCoordinates();
-                    cout << coordinates.x << ", " << coordinates.y << ", " << coordinates.z << "\r" << endl << flush;
+                    cout << (int) coordinates.x << ", " << (int) coordinates.y << ", " << (int) coordinates.z 
+                        << blank << endl << flush;
 
                     GoTo(10, 8);
                     cout << "Nearest stronghold: ";
