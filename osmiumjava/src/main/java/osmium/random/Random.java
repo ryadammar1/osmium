@@ -4,31 +4,26 @@ public class Random {
 	
 	private long originalSeed;
 	private long seed;
+
 	
+	public Random() {
+		this.originalSeed = 0;
+		
+		setSeed(0,false);
+	}
+
 	public long getSeed() {
 		return seed;
+	}
+	
+	public void reset() {
+		seed = originalSeed;
 	}
 
 	public void setSeed(long seed, boolean force) {
 		this.seed = seed;
 		if(force)
 			this.originalSeed = seed;
-	}
-	
-	public void reset() {
-		seed = originalSeed;
-	}
-	
-	public Random(long seed) {
-		this.originalSeed = seed;
-		
-		setSeed(seed,false);
-	}
-	
-	public Random() {
-		this.originalSeed = 0;
-		
-		setSeed(0,false);
 	}
 
 	public int nextInt(final int n, boolean affectSeed) {

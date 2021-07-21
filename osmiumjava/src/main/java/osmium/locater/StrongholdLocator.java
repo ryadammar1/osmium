@@ -13,9 +13,6 @@ public class StrongholdLocator {
 	}
 
 	public boolean locateStronghold(long seed) {
-		if(seed == -1) // Save directory is empty
-			return false;
-		
 		double dist, angle;
 
 		Random rnd = new Random();

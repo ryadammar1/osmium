@@ -1,5 +1,6 @@
 #include "JavaInvocater.h"  
 #include <iostream>
+#include <vector>
 
 JNIEnv* env;
 JavaVM* jvm;
@@ -34,20 +35,30 @@ JavaInvocater::JavaInvocater(std::string library_path) {
         exit(0);
     }
     
-    jmethodID instantiate = env->GetStaticMethodID(cls, "instantiate", "()V");
-    env->CallStaticVoidMethod(cls, instantiate);
+    jmethodID instantiateOsmium = env->GetStaticMethodID(cls, "instantiateOsmium", "()V");
+    env->CallStaticVoidMethod(cls, instantiateOsmium);
 }
 
-void JavaInvocater::CallJar(std::string structure, int playerX, int playerZ) {
+    vector<int> JavaInvocater::CallJar(std::string structure, int playerX, int playerZ) {
     jstring structureJstring = env->NewStringUTF(const_cast<char*>(structure.c_str()));
 
-    jmethodID getLocation = env->GetStaticMethodID(cls, "getLocation", "(Ljava/lang/String;II)V");
-    env->CallStaticVoidMethod(cls, getLocation, structureJstring, playerX, playerZ);
+    jmethodID getStructureLocation = env->GetStaticMethodID(cls, "getStructureLocation", "(Ljava/lang/String;II)[I");
+    jintArray retval = (jintArray) env->CallStaticObjectMethod(cls, getStructureLocation, structureJstring, playerX, playerZ);
+
+    vector<int> result;
+
+    jint* carr;
+        carr = env->GetIntArrayElements(retval, JNI_FALSE);
+
+    for (int i = 0; i <= 2; i++)
+        result.push_back(carr[i]);
+
+    return result;
 }
 
 void JavaInvocater::UpdateGameDir(std::string game_dir) {
-    jstring dir = env->NewStringUTF(const_cast<char*>(game_dir.c_str()));
+    jstring jgame_dir = env->NewStringUTF(const_cast<char*>(game_dir.c_str()));
 
-    jmethodID setSaveDir = env->GetStaticMethodID(cls, "setSaveDir", "(Ljava/lang/String)V");
-    env->CallStaticVoidMethod(cls, setSaveDir, dir);
+    jmethodID setGameDirectory = env->GetStaticMethodID(cls, "setGameDirectory", "(Ljava/lang/String)V");
+    env->CallStaticVoidMethod(cls, setGameDirectory, jgame_dir);
 }

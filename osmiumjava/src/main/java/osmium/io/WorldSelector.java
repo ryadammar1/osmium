@@ -4,34 +4,19 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import osmium.exception.InvalidDirectoryException;
+import osmium.exception.exceptionTypes.EmptyDirectoryException;
+import osmium.exception.exceptionTypes.InvalidDirectoryException;
 
 public class WorldSelector {
 
 	private String savesPath;
-	private File worldDir;
-
-	public WorldSelector(String savesPath) {
-		this.savesPath = savesPath;
-	}
+	private File worldDirectory;
 
 	public WorldSelector() {
 		this.savesPath = System.getenv("APPDATA") + "\\.minecraft\\saves\\";
 	}
 
-	public File getWorldDir() throws InvalidDirectoryException {
-		if (worldDir != null)
-			return worldDir;
-		refreshWorldDir();
-		return worldDir;
-	}
-
-	public File getRefreshedWorldDir() throws InvalidDirectoryException {
-		refreshWorldDir();
-		return worldDir;
-	}
-
-	private void refreshWorldDir() throws InvalidDirectoryException {
+	private void refreshWorldDir() throws InvalidDirectoryException, EmptyDirectoryException {
 		File dir = new File(savesPath);
 
 		if (!dir.exists())
@@ -39,38 +24,24 @@ public class WorldSelector {
 
 		File[] worlds = dir.listFiles();
 
-		if (worlds.length == 0) {
-			this.worldDir = null;
-			return;
-		}
-
-		this.worldDir = Arrays.stream(worlds).filter(File::isDirectory).max(Comparator.comparing(File::lastModified))
-				.orElse(null);
-	}
-
-	public File getLevelDat() throws InvalidDirectoryException {
-		return new File(getWorldDir() + "\\level.dat");
-	}
-
-	public File getRefreshedLevelDat() throws InvalidDirectoryException {
-		File refreshedWorldDir = getRefreshedWorldDir();
+		worldDirectory = Arrays.stream(worlds).filter(File::isDirectory)
+				.max(Comparator.comparing(File::lastModified)).orElse(null);
 		
-		if (refreshedWorldDir == null)
-			return null;
-		
-		return new File(refreshedWorldDir + "\\level.dat");
+		if (worldDirectory == null)
+			throw new EmptyDirectoryException(dir);
 	}
 
-	public void setWorldDir(File worldDir) {
-		this.worldDir = worldDir;
-	}
-
-	public String getSavesPath() {
-		return savesPath;
+	public File getLevelDat() throws InvalidDirectoryException, EmptyDirectoryException {
+		refreshWorldDir();
+			
+		return new File(worldDirectory + "\\level.dat");
 	}
 
 	public void setSavesPath(String savesPath) {
 		this.savesPath = savesPath;
 	}
-
+	
+	public void resetSavesPath() {
+		this.savesPath = System.getenv("APPDATA") + "\\.minecraft\\saves\\";
+	}
 }
