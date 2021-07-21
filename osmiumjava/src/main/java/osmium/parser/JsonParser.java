@@ -17,7 +17,7 @@ public class JsonParser {
 		Object obj, data = ntag.getTag();
 		JSONObject jobj;
 
-		for (int i = 0; i <= 6; i++) {
+		for (int i = 0; i <= OBJECTS.length -1 ; i++) {
 			obj = new JSONParser().parse(data.toString());
 			jobj = (JSONObject) obj;
 			data = jobj.get(OBJECTS[i]);

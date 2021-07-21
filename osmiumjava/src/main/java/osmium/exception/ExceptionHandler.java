@@ -13,7 +13,7 @@ public class ExceptionHandler {
 		}
 	};
 
-	public static int[] returnSucces(int[] array) {
+	public static int[] returnSuccess(int[] array) {
 		return new int[] { 0, array[0], array[1] };
 	}
 

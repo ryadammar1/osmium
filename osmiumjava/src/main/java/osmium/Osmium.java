@@ -47,12 +47,12 @@ public class Osmium {
 
 		if (structure.contentEquals("STRONGHOLD")) {
 			if (strongholdLocater.locateStronghold(seed))
-				return (strongholdLocater.getCoordinates()).toIntegerArray();
+				return ExceptionHandler.returnSuccess(strongholdLocater.getCoordinates().toIntegerArray());
 			else
 				return ExceptionHandler.returnFailure();
 		} else {
 			if (structureLocater.locateStructure(seed, StructureEnum.valueOf(structure), playerX, playerZ))
-				return ExceptionHandler.returnSucces(structureLocater.getCoordinates().toIntegerArray());
+				return ExceptionHandler.returnSuccess(structureLocater.getCoordinates().toIntegerArray());
 			else
 				return ExceptionHandler.returnFailure();
 		}

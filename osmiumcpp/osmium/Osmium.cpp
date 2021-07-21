@@ -2,6 +2,7 @@
 #include "JavaInvocater.h"
 #include <conio.h>
 #include <cstdlib>
+#include <vector>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ void ShowConsoleCursor(bool showFlag)
     CONSOLE_CURSOR_INFO     cursorInfo;
 
     GetConsoleCursorInfo(out, &cursorInfo);
-    cursorInfo.bVisible = showFlag; // set the cursor visibility
+    cursorInfo.bVisible = showFlag;
     SetConsoleCursorInfo(out, &cursorInfo);
 }
 
@@ -42,21 +43,24 @@ int UpdateGameDirectory() {
 
 int PrintStronghold()
 {
-    javaInvocater->CallJar("STRONGHOLD", 0, 0);
+    vector<int> coords = javaInvocater->CallJar("STRONGHOLD", 0, 0);
+    cout << coords[1] << ", " << coords[2];
 
     return 0;
 }
 
 int PrintBastion(int x, int z)
 {
-    javaInvocater->CallJar("BASTION", x, z);
+    vector<int> coords = javaInvocater->CallJar("BASTION", x, z);
+    cout << coords[1] << ", " << coords[2];
 
     return 0;
 }
 
 int PrintFortress(int x, int z)
 {
-    javaInvocater->CallJar("FORTRESS", x, z);
+    vector<int> coords = javaInvocater->CallJar("FORTRESS", x, z);
+    cout << coords[1] << ", " << coords[2];
 
     return 0;
 }
