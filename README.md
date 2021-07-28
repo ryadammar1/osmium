@@ -11,7 +11,7 @@ Coordinates are updated automatically upon creation of a new world.
 4. Choose "Peek" to display coordinates
 
 ## Limitations
-There is a small chance that the program might not display a valid location for the bastion and/or fortress due to how minecraft handles nether generation  
+There is a small chance that the program does not display a valid location for the bastion and/or fortress due to how minecraft handles nether generation  
 
 ## Demo
 https://www.youtube.com/watch?v=K9aV_BTnOoM
