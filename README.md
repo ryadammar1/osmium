@@ -9,3 +9,6 @@ Coordinates are updated automatically upon creation of a new world.
 2. Run Osmium.exe
 3. Set minecraft custom location if needed (no need to if minecraft is installed on the default location)
 4. Choose "Peek" to display coordinates
+
+## Demo
+https://www.youtube.com/watch?v=K9aV_BTnOoM
