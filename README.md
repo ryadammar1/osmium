@@ -10,8 +10,5 @@ Coordinates are updated automatically upon creation of a new world.
 3. Set minecraft custom location if needed (no need to if minecraft is installed on the default location)
 4. Select "Peek" to display coordinates
 
-## Limitations
-There is a small chance that the program does not display a valid location for the bastion and/or fortress.
-
 ## Demo
 https://www.youtube.com/watch?v=K9aV_BTnOoM
